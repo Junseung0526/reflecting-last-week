@@ -3,5 +3,5 @@
   "Frontend": [".js", ".jsx", ".ts", ".tsx", ".vue", ".html", ".css", ".scss"],
   "DevOps": [".yaml", ".yml", ".dockerfile", "Dockerfile", ".tf", ".sh", "docker-compose"],
   "Mobile": [".swift", ".dart"],
-  "Algorithm/Study": [".cpp", ".c", ".md"]
+  "Algorithm/Study": [".cpp", ".py", ".java"]
 }
