@@ -15,10 +15,10 @@ class GitHubAnalyzer:
 
     def get_last_week_data(self, username):
         """
-        확장자 통계(최근 7일)와 스트릭 계산을 위한 날짜 데이터(전체)를 가져옵니다.
+        확장자 통계(최근 30일)와 스트릭 계산을 위한 날짜 데이터(전체)를 가져옵니다.
         """
         user = self.g.get_user(username)
-        seven_days_ago = datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(days=7)
+        thirty_days_ago = datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(days=30)
 
         extensions = []
         commit_dates = set()
@@ -34,21 +34,24 @@ class GitHubAnalyzer:
 
         for event in events:
             event_count += 1
+
+            # 30일 이전 데이터면 조기 종료
+            if event.created_at < thirty_days_ago:
+                break
+
             if event.type == "PushEvent":
                 push_event_count += 1
                 commit_dates.add(event.created_at.date())
 
-                if event.created_at >= seven_days_ago:
+                if event.created_at >= thirty_days_ago:
                     recent_push_count += 1
 
-                    # repo 객체를 제대로 가져오기
                     try:
                         repo = self.g.get_repo(event.repo.name)
                     except Exception as e:
                         print(f"⚠️ Repo 접근 실패 ({event.repo.name}): {e}")
                         continue
 
-                    # head SHA로 커밋 가져오기
                     try:
                         head_sha = event.payload.get('head')
                         if not head_sha:
@@ -70,7 +73,7 @@ class GitHubAnalyzer:
                         print(f"⚠️ 커밋 처리 중 에러 (SHA: {head_sha[:7] if head_sha else 'N/A'}): {e}")
                         continue
 
-        print(f"📊 수집 완료: 이벤트 {event_count}개 | PushEvent {push_event_count}개 | 최근 7일 Push {recent_push_count}개 | 커밋 {commit_payload_count}개 | 파일 {file_count}개")
+        print(f"📊 수집 완료: 이벤트 {event_count}개 | PushEvent {push_event_count}개 | 최근 30일 Push {recent_push_count}개 | 커밋 {commit_payload_count}개 | 파일 {file_count}개")
 
 
         return extensions, commit_dates
@@ -113,5 +116,5 @@ if __name__ == "__main__":
         streak = analyzer.calculate_streak(dates)
 
         print(f"\n--- 분석 결과 ---")
-        print(f"최근 7일간 수정된 파일 확장자 수: {len(exts)}개")
-        print(f"현재 연속 커밋 기록: {streak}일 🔥")
+        print(f"최근 30일간 수정된 파일 확장자 수: {len(exts)}개")
+        print(f"현재 연속 커밋 기록: {streak}일")
