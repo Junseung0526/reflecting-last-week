@@ -4,7 +4,6 @@ from github_api import GitHubAnalyzer
 from analyzer import StatsAnalyzer
 from github import Github, InputFileContent
 
-# 0. 환경 변수 로드
 load_dotenv()
 
 TOKEN = os.getenv('GH_TOKEN')
@@ -36,7 +35,7 @@ def update_gist(content):
 
 
 def main():
-    print(f"🔍 {USERNAME}님의 지난주 활동을 분석 중...")
+    print(f"🔍 {USERNAME}님의 최근 30일 활동을 분석 중...")
     api = GitHubAnalyzer(TOKEN)
     exts, dates = api.get_last_week_data(USERNAME)
     streak = api.calculate_streak(dates)
@@ -49,7 +48,6 @@ def main():
 
     final_text = analyzer.format_gist_text(stats, streak, top_lang)
 
-    # 4. 결과 출력 및 Gist 업데이트
     print("\n" + "=" * 30)
     print(final_text)
     print("=" * 30 + "\n")
