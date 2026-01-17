@@ -35,7 +35,7 @@ def update_gist(content):
 
 
 def main():
-    print(f"🔍 {USERNAME}님의 최근 30일 활동을 분석 중...")
+    print(f"🔍 {USERNAME}님의 지난주 활동을 분석 중...")
     api = GitHubAnalyzer(TOKEN)
     exts, dates = api.get_last_week_data(USERNAME)
     streak = api.calculate_streak(dates)
