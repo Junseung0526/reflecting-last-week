@@ -51,23 +51,17 @@ class StatsAnalyzer:
 
     def format_gist_text(self, stats, streak, top_language):
         """
-        Gist에 박제할 최종 텍스트 레이아웃을 만듭니다.
+        Gist에 박제할 최종 텍스트 레이아웃을 만듭니다. (5줄 이내 압축 버전)
         """
         lines = []
-        lines.append("📅 ReflectingLastWeek (Last 7 Days)")
+        lines.append(f"ReflectingLastWeek (Last 7 Days) | 🏆 {top_language} | 🔥 {streak}일 Streak")
         lines.append("")
 
-        lines.append(f"🏆 TOP LANGUAGE: {top_language}")
-        lines.append("")
-
-        lines.append("🛠 FOCUS AREA")
-        for category, percent in stats.items():
+        # 상위 3개 카테고리만 표시
+        top_3_stats = dict(list(stats.items())[:3])
+        for category, percent in top_3_stats.items():
             bar_length = int(percent / 10)
             bar = "█" * bar_length + "░" * (10 - bar_length)
             lines.append(f"{category:<12} {bar} {percent}%")
-
-        lines.append("")
-        lines.append("🔥 STREAK STATUS")
-        lines.append(f"1일 1커밋 연속 {streak}일째 순항 중!")
 
         return "\n".join(lines)
