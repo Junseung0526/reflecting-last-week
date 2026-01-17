@@ -88,7 +88,7 @@ pip install PyGithub python-dotenv
 3. 실행:
 
 ```bash
-python main.py
+python src/main.py
 ```
 
 ## 📝 커스터마이징
