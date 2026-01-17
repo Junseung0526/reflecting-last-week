@@ -4,11 +4,9 @@ import os
 
 class StatsAnalyzer:
     def __init__(self, mapping_path='mappings.json'):
-        # 프로젝트 루트 디렉토리 찾기 (src/의 부모)
         current_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         actual_path = os.path.join(current_dir, mapping_path)
 
-        # 루트에서 못 찾으면 현재 작업 디렉토리에서 찾기
         if not os.path.exists(actual_path):
             actual_path = os.path.join(os.getcwd(), mapping_path)
 
@@ -21,29 +19,25 @@ class StatsAnalyzer:
     def analyze_categories(self, extensions):
         """
         확장자 리스트를 바탕으로 카테고리별 비중을 계산합니다.
+        중복 매칭을 허용하여 하나의 확장자가 여러 카테고리에 포함될 수 있습니다.
         """
         if not extensions:
             return {}
 
         category_counts = {key: 0 for key in self.mapping.keys()}
-        total_matched = 0
 
         for ext in extensions:
-            matched = False
             for category, ext_list in self.mapping.items():
                 if ext in ext_list:
                     category_counts[category] += 1
-                    total_matched += 1
-                    matched = True
-                    break
 
-
-        if total_matched == 0:
+        total_count = sum(category_counts.values())
+        if total_count == 0:
             return {}
 
         stats = {}
         for category, count in category_counts.items():
-            percentage = (count / total_matched) * 100
+            percentage = (count / total_count) * 100
             if percentage > 0:
                 stats[category] = round(percentage, 1)
 
