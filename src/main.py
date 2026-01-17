@@ -43,7 +43,12 @@ def main():
     analyzer = StatsAnalyzer(mapping_path='mappings.json')
     stats = analyzer.analyze_categories(exts)
 
-    top_lang_raw = max(set(exts), key=exts.count) if exts else "N/A"
+    all_mapped_exts = set()
+    for ext_list in analyzer.mapping.values():
+        all_mapped_exts.update(ext_list)
+
+    filtered_exts = [ext for ext in exts if ext in all_mapped_exts]
+    top_lang_raw = max(set(filtered_exts), key=filtered_exts.count) if filtered_exts else "N/A"
     top_lang = top_lang_raw.replace('.', '').upper()
 
     final_text = analyzer.format_gist_text(stats, streak, top_lang)
