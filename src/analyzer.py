@@ -4,13 +4,13 @@ import os
 
 class StatsAnalyzer:
     def __init__(self, mapping_path='mappings.json'):
-
-        current_dir = os.getcwd()
+        # 프로젝트 루트 디렉토리 찾기 (src/의 부모)
+        current_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         actual_path = os.path.join(current_dir, mapping_path)
 
+        # 루트에서 못 찾으면 현재 작업 디렉토리에서 찾기
         if not os.path.exists(actual_path):
-            base_path = os.path.dirname(os.path.abspath(__file__))
-            actual_path = os.path.join(base_path, mapping_path)
+            actual_path = os.path.join(os.getcwd(), mapping_path)
 
         if not os.path.exists(actual_path):
             raise FileNotFoundError(f"'{mapping_path}' 파일을 찾을 수 없습니다. 위치를 확인해주세요: {actual_path}")
