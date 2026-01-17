@@ -1,0 +1,7 @@
+{
+  "Backend": [".java", ".py", ".go", ".rb", ".php", ".kt"],
+  "Frontend": [".js", ".jsx", ".ts", ".tsx", ".vue", ".html", ".css"],
+  "DevOps": [".yaml", ".yml", ".dockerfile", ".tf", ".sh", "docker-compose.yml"],
+  "Mobile": [".swift", ".dart"],
+  "Algorithm/Study": [".cpp", ".c", ".py", ".java"]
+}
