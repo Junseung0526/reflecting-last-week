@@ -26,24 +26,51 @@ class GitHubAnalyzer:
         events = user.get_events()
 
         print("데이터 수집 중... 잠시만 기다려주세요.")
+        event_count = 0
+        push_event_count = 0
+        recent_push_count = 0
+        commit_payload_count = 0
+        file_count = 0
+
         for event in events:
+            event_count += 1
             if event.type == "PushEvent":
+                push_event_count += 1
                 commit_dates.add(event.created_at.date())
 
                 if event.created_at >= seven_days_ago:
-                    repo = event.repo
-                    for commit_payload in event.payload.get('commits', []):
-                        try:
-                            commit = repo.get_commit(commit_payload['sha'])
-                            for file in commit.files:
-                                filename = file.filename
-                                if '.' in filename:
-                                    ext = "." + filename.split('.')[-1].lower()
-                                    extensions.append(ext)
-                                else:
-                                    extensions.append(filename)
-                        except Exception:
+                    recent_push_count += 1
+
+                    # repo 객체를 제대로 가져오기
+                    try:
+                        repo = self.g.get_repo(event.repo.name)
+                    except Exception as e:
+                        print(f"⚠️ Repo 접근 실패 ({event.repo.name}): {e}")
+                        continue
+
+                    # head SHA로 커밋 가져오기
+                    try:
+                        head_sha = event.payload.get('head')
+                        if not head_sha:
                             continue
+
+                        commit = repo.get_commit(head_sha)
+                        commit_payload_count += 1
+
+                        for file in commit.files:
+                            filename = file.filename
+                            if '.' in filename:
+                                ext = "." + filename.split('.')[-1].lower()
+                                extensions.append(ext)
+                                file_count += 1
+                            else:
+                                extensions.append(filename)
+                                file_count += 1
+                    except Exception as e:
+                        print(f"⚠️ 커밋 처리 중 에러 (SHA: {head_sha[:7] if head_sha else 'N/A'}): {e}")
+                        continue
+
+        print(f"📊 수집 완료: 이벤트 {event_count}개 | PushEvent {push_event_count}개 | 최근 7일 Push {recent_push_count}개 | 커밋 {commit_payload_count}개 | 파일 {file_count}개")
 
 
         return extensions, commit_dates
