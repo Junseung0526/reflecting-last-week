@@ -54,7 +54,7 @@ class StatsAnalyzer:
         Gist에 박제할 최종 텍스트 레이아웃을 만듭니다. (5줄 이내 압축 버전)
         """
         lines = []
-        lines.append(f"ReflectingLastWeek (Last 7 Days) | 🏆 {top_language} | 🔥 {streak}일 Streak")
+        lines.append(f"ReflectingLastWeek (Last 30 Days) | {top_language} | {streak}일 커밋 중!")
         lines.append("")
 
         # 상위 3개 카테고리만 표시
