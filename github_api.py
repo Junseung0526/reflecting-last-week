@@ -1,7 +1,9 @@
 import datetime
 import os
 from github import Github
+from dotenv import load_dotenv
 
+load_dotenv()
 
 class GitHubAnalyzer:
     def __init__(self, token):
@@ -12,7 +14,7 @@ class GitHubAnalyzer:
         최근 7일간의 커밋 파일 확장자 통계와 커밋 날짜를 가져옵니다.
         """
         user = self.g.get_user(username)
-        seven_days_ago = datetime.datetime.now() - datetime.timedelta(days=7)
+        seven_days_ago = datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(days=7)
 
         extensions = []
         commit_dates = set()
@@ -21,7 +23,7 @@ class GitHubAnalyzer:
         events = user.get_events()
 
         for event in events:
-            # 7일 이전 데이터면 중단
+            # 이벤트 생성 시간이 7일 이전이면 루프 종료
             if event.created_at < seven_days_ago:
                 break
 
@@ -68,3 +70,22 @@ class GitHubAnalyzer:
             current_check -= datetime.timedelta(days=1)
 
         return streak
+
+
+# 테스트 코드
+if __name__ == "__main__":
+    TOKEN = os.getenv('GH_TOKEN')
+    USERNAME = os.getenv('GH_USERNAME')
+
+    if not TOKEN or not USERNAME:
+        print("에러: .env 파일에 GH_TOKEN 또는 GH_USERNAME이 설정되지 않았습니다.")
+    else:
+        analyzer = GitHubAnalyzer(TOKEN)
+        print(f"{USERNAME}님의 데이터를 분석 중입니다...")
+
+        exts, dates = analyzer.get_last_week_data(USERNAME)
+        streak = analyzer.calculate_streak(dates)
+
+        print(f"--- 분석 결과 ---")
+        print(f"최근 7일간 수정된 파일 확장자 수: {len(exts)}개")
+        print(f"현재 연속 커밋 기록: {streak}일")
