@@ -116,12 +116,12 @@ on:
     - cron: '10 15 * * *'
 ```
 
-## 🛠️ 기술 스택
+## 기술 스택
 
 - Python 3.10
 - [PyGithub](https://github.com/PyGithub/PyGithub) - GitHub API 클라이언트
 - GitHub Actions - 자동화 워크플로우
 
-## 📄 라이선스
+## 라이선스
 
 MIT License
