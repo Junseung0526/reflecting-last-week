@@ -1,7 +1,7 @@
 {
-  "Backend": [".java", ".py", ".go", ".rb", ".php", ".kt"],
-  "Frontend": [".js", ".jsx", ".ts", ".tsx", ".vue", ".html", ".css"],
-  "DevOps": [".yaml", ".yml", ".dockerfile", ".tf", ".sh", "docker-compose.yml"],
+  "Backend": [".java", ".py", ".go", ".rb", ".php", ".kt", ".sql"],
+  "Frontend": [".js", ".jsx", ".ts", ".tsx", ".vue", ".html", ".css", ".scss"],
+  "DevOps": [".yaml", ".yml", ".dockerfile", "Dockerfile", ".tf", ".sh", "docker-compose"],
   "Mobile": [".swift", ".dart"],
-  "Algorithm/Study": [".cpp", ".c", ".py", ".java"]
+  "Algorithm/Study": [".cpp", ".c", ".md"]
 }
